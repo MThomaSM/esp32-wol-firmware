@@ -94,7 +94,7 @@ void loop() {
       Serial.println("Sending magic packets to "+value);
       WOL.sendMagicPacket(apiResponseObj[keys[i]]);
       delay(500);
-      readGETWebResponse(base_api_url + "/startlist/" + uuid + "/mac/" + value+"/remove);
+      readGETWebResponse(base_api_url + "/startlist/" + uuid + "/mac/" + value+"/remove");
       Serial.println(value + " was removed from startlist");
   }
   delay(8000); 
