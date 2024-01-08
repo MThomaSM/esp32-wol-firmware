@@ -11,7 +11,7 @@ WakeOnLan WOL(UDP);
 const char* ssid = "nothing";
 const char* password =  "nothing";
 String uuid =  "nothing";
-String base_api_url = "BASE_URL_TO_BACKEND";
+String base_api_url = "https://pcmanager-backend.tomasmagnes.dev/api"; //base url to backend
 
 String readGETWebResponse(String url){
   HTTPClient https;
@@ -86,7 +86,7 @@ void setup(){
 void loop() { 
   if(millis() >= 86400000) return ESP.restart();
   if(WiFi.status() != WL_CONNECTED) return setup();
-  String response = readGETWebResponse(base_api_url + "startlist/maclist/" + uuid);
+  String response = readGETWebResponse(base_api_url + "/startlist/" + uuid + "/maclist");
   JSONVar apiResponseObj = JSON.parse(response);
   JSONVar keys = apiResponseObj.keys();
   for(int i = 0; i < keys.length(); i++){
@@ -94,7 +94,7 @@ void loop() {
       Serial.println("Sending magic packets to "+value);
       WOL.sendMagicPacket(apiResponseObj[keys[i]]);
       delay(500);
-      readGETWebResponse(base_api_url + "startlist/maclist/" + uuid + "/remove/" + value);
+      readGETWebResponse(base_api_url + "/startlist/" + uuid + "/mac/" + value+"/remove);
       Serial.println(value + " was removed from startlist");
   }
   delay(8000); 
