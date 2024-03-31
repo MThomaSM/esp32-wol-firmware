@@ -88,14 +88,19 @@ void loop() {
   if(WiFi.status() != WL_CONNECTED) return setup();
   String response = readGETWebResponse(base_api_url + "/startlist/" + uuid + "/maclist");
   JSONVar apiResponseObj = JSON.parse(response);
-  JSONVar keys = apiResponseObj.keys();
-  for(int i = 0; i < keys.length(); i++){
-      String value = JSON.stringify(apiResponseObj[keys[i]]);
-      Serial.println("Sending magic packets to "+value);
-      WOL.sendMagicPacket(apiResponseObj[keys[i]]);
-      delay(500);
-      readGETWebResponse(base_api_url + "/startlist/" + uuid + "/mac/" + value+"/remove");
-      Serial.println(value + " was removed from startlist");
+  
+  if (JSON.typeof(apiResponseObj) == "undefined") {
+    Serial.println("Parsing JSON failed!");
+    return;
   }
-  delay(8000); 
+
+  for(int i = 0; i < apiResponseObj.length(); i++){
+      String macAddress = (const char*)apiResponseObj[i];
+      Serial.println("Sending magic packets to " + macAddress);
+      WOL.sendMagicPacket(macAddress);
+      delay(500);
+      readGETWebResponse(base_api_url + "/startlist/" + uuid + "/mac/" + macAddress + "/remove");
+      Serial.println(macAddress + " was removed from startlist");
+  }
+  delay(8000);
 }
