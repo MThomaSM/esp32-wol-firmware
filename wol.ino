@@ -35,7 +35,7 @@ void appendToFile(String filename, String content){
   if (!SPIFFS.begin(true)) return;
   File fileToAppend = SPIFFS.open(filename, FILE_APPEND);
   if(!fileToAppend){
-      Serial.println("There was an error opening the file for appending");w
+      Serial.println("There was an error opening the file for appending");
       return;
   }
   fileToAppend.println(content);
